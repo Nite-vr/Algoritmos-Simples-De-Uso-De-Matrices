@@ -146,29 +146,33 @@ if __name__ == "__main__":
         print("\nMatriz ASCII:")
         imprimir_decimal(matriz_estado)
         
-        print("\nMatriz Sumada:")
-        estado_1 = suma_matrices(matriz_estado, A)
-        imprimir_decimal(estado_1)
-        
-        print(f"\nSubstitución SBOX (Hex):")
-        estado_2 = substitute(estado_1)
-        
-        if estado_2 is None:
-            print("Error durante la substitución.")
-        else:
-            imprimir_hex(estado_2)
+        for ronda in range(10):
+            print(f"\n---- Ronda {ronda + 1} ----")
+            print("\nMatriz Sumada:")
+            estado_1 = suma_matrices(matriz_estado, A)
+            imprimir_decimal(estado_1)
             
-            print(f"\nFilas Desplazadas (Hex):")
-            estado_3 = shift_rows(estado_2)
-            imprimir_hex(estado_3)
+            print(f"\nSubstitución SBOX (Hex):")
+            estado_2 = substitute(estado_1)
+            
+            if estado_2 is None:
+                print("Error durante la substitución.")
+                break
+            else:
+                imprimir_hex(estado_2)
+                
+                print(f"\nFilas Desplazadas (Hex):")
+                estado_3 = shift_rows(estado_2)
+                imprimir_hex(estado_3)
 
-            print(f"\nMultiplicación (Hex):")
-            
-            estado_4 = multiplicarMatrices(MIX_MATRIX, estado_3)
-            
-            if estado_4:
-                imprimir_hex(estado_4)
-            
-            if len(bloques_mensaje) > 1:
-                print(f"\nNota: El mensaje original generó {len(bloques_mensaje)} bloques,")
-                print("pero solo se ha procesado el primero para esta demostración.")
+                print(f"\nMultiplicación (Hex):")
+                
+                estado_4 = multiplicarMatrices(MIX_MATRIX, estado_3)
+                
+                if estado_4:
+                    imprimir_hex(estado_4)
+                    matriz_estado = estado_4  # actualizar estado para la siguiente ronda
+                
+        if len(bloques_mensaje) > 1:
+            print(f"\nNota: El mensaje original generó {len(bloques_mensaje)} bloques,")
+            print("pero solo se ha procesado el primero para esta demostración.")
